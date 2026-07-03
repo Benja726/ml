@@ -8,25 +8,41 @@ Ver `CONTEXTO.md` (hechos) e `INSTRUCCIONES.md` (cómo trabajar).
 
 ## Dónde estoy
 
-**Tarea 1 (Preprocesamiento): estructuralmente completa.**
+**Tarea 1 (Preprocesamiento): completa.**
 - Análisis de calidad de datos → hecho y documentado.
 - Tratamiento de faltantes → hecho y documentado.
 - Análisis de outliers → hecho y documentado.
 - Drop de columnas basura → ejecutado.
-- Estrategia de escalado → definida y documentada.
-- Celda Markdown `[9]` corregida (se quitó la marca `[Tratamiento: pendiente]`).
-- ⚠️ Pendiente de cierre: evaluar efecto del escalado sobre la regresión
-  logística (se cierra en Tarea 3 comparando con/sin StandardScaler).
+- Estrategia de escalado → definida y documentada (Pipeline con StandardScaler).
 
-**Tarea 2 (Feature Engineering): estructuralmente completa.**
+**Tarea 2 (Feature Engineering): completa.**
 - Selección y descarte de derivadas redundantes → hecho.
 - Encoding de categóricas → hecho.
 - Creación de nuevas variables → hecho.
 - Análisis de correlación con target → hecho.
-- ⚠️ Pendiente de cierre: importancia de features desde modelo entrenado
-  (se agrega en Tarea 3 con `.feature_importances_` del árbol o RF).
 
-**Tarea 3 a 6: no iniciadas.**
+**Tarea 3 (Modelos de Clasificación): completa.**
+- 6 modelos implementados: Árbol, Logística, RF, GB, AdaBoost, MLP.
+- Todos evaluados sobre el mismo holdout 80/20 estratificado.
+- Markdowns actualizados con tablas de resultados base.
+
+**Tarea 4 (Evaluación y Selección): completa.**
+- Holdout estratificado 80/20 (4507/1127, tasa churn 0.265 en ambos).
+- GridSearchCV 5-fold sobre GB (27 combinaciones × 5 = 135 modelos).
+- Métricas completas: accuracy, precision, recall, F1, AUC-ROC, matrices de confusión.
+- Modelo seleccionado: GB Tuneado (lr=0.05, max_depth=2, n_estimators=200, subsample=0.8).
+- AUC-ROC holdout: 0.8404.
+- Submission Kaggle generada (submission.csv, 1409 filas, probabilidades).
+
+**Tarea 5 (Componente de Investigación): en curso — SHAP.**
+- Técnica elegida: SHAP (Lundberg & Lee, 2017) con `TreeExplainer` sobre GB Tuneado.
+- shap instalado en el venv. Explainer creado, shap_values calculados (1127×49).
+- Global (bar chart): hecho. Top variables: Contract_Month-to-month, tenure, InternetService_Fiber optic, OnlineSecurity_No, PaymentMethod_Electronic check.
+- Global (beeswarm): en curso — muestra dirección del impacto además de magnitud.
+- Local (waterfall): pendiente — análisis de predicciones individuales.
+- Markdown Tarea 5: pendiente redactar.
+
+**Tarea 6 (Modelo Final): pendiente (sección propia en notebook).**
 
 ---
 
@@ -161,38 +177,43 @@ informe PDF** (sección "Análisis del impacto de variables").
 
 | Tarea | Estado |
 |---|---|
-| 1. Preprocesamiento | 🔵 Estructuralmente completa (cierra efecto escalado en T3) |
-| 2. Feature Engineering | 🔵 Estructuralmente completa (cierra importancia features en T3) |
-| 3. Modelos de clasificación | ⚪ Pendiente (árbol, logística, RF, boosting, MLP) |
-| 4. Evaluación y selección | ⚪ Pendiente (Holdout/CV, hiperparámetros, tablas de métricas) |
-| 5. Componente de investigación | ⚪ Pendiente (elegir SHAP / Stacking / t-SNE) |
-| 6. Modelo final | ⚪ Pendiente |
-| Kaggle | ⚪ Pendiente el primer envío (probabilidades, formato correcto) |
-| Informe PDF (≤12 pág) | 🔵 En curso — texto de T1 y T2 redactado |
+| 1. Preprocesamiento | ✅ Completa |
+| 2. Feature Engineering | ✅ Completa |
+| 3. Modelos de clasificación | ✅ Completa (6 modelos: Árbol, Logística, RF, GB, AdaBoost, MLP) |
+| 4. Evaluación y selección | ✅ Completa (Holdout + GridSearchCV + tablas + matrices) |
+| 5. Componente de investigación | 🔵 En curso — SHAP (bar chart global hecho, beeswarm + waterfall pendientes) |
+| 6. Modelo final | ⚪ Pendiente (sección propia en notebook) |
+| Kaggle | ✅ Subido — Score público: **0.86247 AUC-ROC** |
+| Informe PDF (≤12 pág) | ⚪ Pendiente redacción formal |
 
 ---
 
-## Pendientes inmediatos (para la próxima sesión)
+## Pendientes inmediatos
 
-1. Verificar que los markdowns de cierre T1 y T2 estén pegados en el notebook.
-3. Iniciar **Tarea 3 — Modelos de clasificación**:
-   - Definir X e y, y el split Holdout (train/val).
-   - Implementar en orden: Árbol de decisión → Regresión logística (con Pipeline
-     + StandardScaler) → Random Forest → Boosting (AdaBoost y/o GradientBoosting)
-     → MLP.
-   - Al entrenar el primer árbol/RF: extraer `.feature_importances_` y graficar
-     → cierra el "impacto de variables" de Tarea 2 y el efecto del escalado de
-     Tarea 1.
-   - Registrar por modelo: accuracy, precision, recall, F1, AUC-ROC, matriz de
-     confusión.
+1. **Tarea 5 — SHAP**: completar beeswarm (dirección de impacto) + waterfall para 1 churner y 1 no-churner + redactar Markdown de la sección.
+2. **Tarea 6**: agregar sección propia en el notebook (selección + hiperparámetros + justificación).
+3. **Informe PDF**: redacción formal de las 6 tareas (≤12 páginas sin carátula/índice/anexos).
+4. **Kaggle**: score público 0.86247 — considerar segundo envío si mejora el modelo.
 
-## Ideas / decisiones a discutir más adelante
+## Decisiones tomadas — Tareas 3 y 4
 
-- **Componente de investigación (Tarea 5):** SHAP encaja bien para la defensa
-  oral (permite explicar predicciones individuales). Stacking también es viable
-  con lo visto en clase (Clase 10). Decidir según tiempo disponible.
-- **Kaggle submission:** hacer un envío "tonto" (prob. 0.5 para todos) para
-  validar el formato CSV antes de invertir en el modelo.
-- **Validación:** Cross-Validation es más robusta que Holdout simple dado el
-  tamaño del dataset (5634 filas). Evaluar usar StratifiedKFold para respetar
-  el balance 73.5/26.5%.
+**Modelo ganador**: GB Tuneado (AUC-ROC 0.8404)
+- Hiperparámetros: lr=0.05, max_depth=2, n_estimators=200, subsample=0.8
+- GridSearchCV 5-fold, optimizando AUC-ROC, 135 modelos entrenados
+- AUC-ROC CV interno: 0.843 (consistente con holdout → sin overfitting)
+
+**Ranking final por AUC-ROC**:
+1. GB Tuneado: 0.8404
+2. AdaBoost: 0.8398
+3. Gradient Boosting: 0.8380
+4. Regresión Logística: 0.8352
+5. MLP: 0.8296
+6. Random Forest: 0.8128
+7. Árbol de Decisión: 0.6641
+
+**AdaBoost**: segundo mejor AUC-ROC (0.8398), muy cerca del GB base.
+Destacable porque AdaBoost es un ensemble diferente al GB (secuencial, sin 
+subsample, minimiza error de clasificación vs. pérdida diferenciable).
+
+**Submission Kaggle**: generada con `gs.best_estimator_.predict_proba(test)[:,1]`
+— probabilidades entre 0 y 1, formato customerID + Churn, 1409 filas.
