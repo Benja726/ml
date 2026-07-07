@@ -34,15 +34,17 @@ Ver `CONTEXTO.md` (hechos) e `INSTRUCCIONES.md` (cómo trabajar).
 - AUC-ROC holdout: 0.8404.
 - Submission Kaggle generada (submission.csv, 1409 filas, probabilidades).
 
-**Tarea 5 (Componente de Investigación): en curso — SHAP.**
+**Tarea 5 (Componente de Investigación): completa — SHAP.**
 - Técnica elegida: SHAP (Lundberg & Lee, 2017) con `TreeExplainer` sobre GB Tuneado.
-- shap instalado en el venv. Explainer creado, shap_values calculados (1127×49).
 - Global (bar chart): hecho. Top variables: Contract_Month-to-month, tenure, InternetService_Fiber optic, OnlineSecurity_No, PaymentMethod_Electronic check.
-- Global (beeswarm): en curso — muestra dirección del impacto además de magnitud.
-- Local (waterfall): pendiente — análisis de predicciones individuales.
-- Markdown Tarea 5: pendiente redactar.
+- Global (beeswarm): hecho — confirma dirección del impacto.
+- Local (waterfall): hecho — churner de mayor riesgo (idx=1042, P=0.891) y cliente de menor riesgo (idx=968, P=0.015). Los mismos factores actúan en direcciones opuestas (simetría).
+- Markdown Tarea 5: redactado y pegado en el notebook.
 
-**Tarea 6 (Modelo Final): pendiente (sección propia en notebook).**
+**Tarea 6 (Modelo Final): completa.**
+- Justificación por métricas (mejor AUC-ROC), robustez (CV interno 0.8437 vs holdout 0.8404, diff 0.0033) y observaciones (Árbol solo 0.6641 vs ensembles; Logística competitiva sugiere señal ~lineal).
+- Evidencia cuantitativa del impacto de `max_depth`: a mayor profundidad, baja el AUC-ROC promedio y sube el desvío entre folds (2→0.8378/0.0065, 3→0.8294/0.0116, 4→0.8256/0.0119).
+- **Experimento probado y descartado**: reentrenar el modelo final con el 100% de los datos (train completo) antes de predecir sobre test. Bajó el score público de Kaggle → se revirtió, se mantiene `gs.best_estimator_` (entrenado solo sobre X_train) como el submission final. Vale como reflexión honesta para el informe.
 
 ---
 
@@ -181,19 +183,20 @@ informe PDF** (sección "Análisis del impacto de variables").
 | 2. Feature Engineering | ✅ Completa |
 | 3. Modelos de clasificación | ✅ Completa (6 modelos: Árbol, Logística, RF, GB, AdaBoost, MLP) |
 | 4. Evaluación y selección | ✅ Completa (Holdout + GridSearchCV + tablas + matrices) |
-| 5. Componente de investigación | 🔵 En curso — SHAP (bar chart global hecho, beeswarm + waterfall pendientes) |
-| 6. Modelo final | ⚪ Pendiente (sección propia en notebook) |
+| 5. Componente de investigación | ✅ Completa — SHAP (global bar + beeswarm + waterfall churner/no-churner) |
+| 6. Modelo final | ✅ Completa (justificación + hiperparámetros + evidencia) |
 | Kaggle | ✅ Subido — Score público: **0.86247 AUC-ROC** |
 | Informe PDF (≤12 pág) | ⚪ Pendiente redacción formal |
+| Uso de IA citado | ⚠️ Pendiente — no está redactado en ningún lado todavía |
 
 ---
 
 ## Pendientes inmediatos
 
-1. **Tarea 5 — SHAP**: completar beeswarm (dirección de impacto) + waterfall para 1 churner y 1 no-churner + redactar Markdown de la sección.
-2. **Tarea 6**: agregar sección propia en el notebook (selección + hiperparámetros + justificación).
-3. **Informe PDF**: redacción formal de las 6 tareas (≤12 páginas sin carátula/índice/anexos).
-4. **Kaggle**: score público 0.86247 — considerar segundo envío si mejora el modelo.
+1. **Informe PDF**: redacción formal de las 6 tareas (≤12 páginas sin carátula/índice/anexos). Notebook ya tiene todo el contenido y las 6 secciones Markdown — el informe es una adaptación de eso, no una redacción desde cero.
+2. **Uso de IA**: falta redactar la cita obligatoria (herramienta + contexto de uso) para el informe.
+3. **Empaque final**: zip/rar ≤40MB con informe.pdf + notebook ejecutado, sin `venv/`.
+4. **Kaggle**: score público 0.86247 (suficiente, ya cumple "al menos un envío" — la letra aclara que el ranking no condiciona la nota).
 
 ## Decisiones tomadas — Tareas 3 y 4
 
